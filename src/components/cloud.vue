@@ -11,8 +11,8 @@
         v-for="hour in 24"
         :key="hour"
         class="cell"
-        :title="props.matrix[day-1][hour-1].value"
-        :class="props.matrix[day-1][hour-1].scale"
+        :title="props.matrix[day - 1][hour - 1]"
+        :style="cellStyle(grade(props.matrix[day - 1][hour - 1]))"
       ></td>
       <td class="day">{{ dayOfWeek(day) }}</td>
     </tr>
@@ -31,48 +31,64 @@
       </td>
       <td></td>
     </tr>
+    <tr>
+      <td></td>
+      <td colspan="24">
+        <table cellpadding="0" cellspacing="0" width="100%" class="white-bkg">
+          <tr height="9">
+            <td v-for="color in props.colors" :key="color" :bgcolor="color"></td>
+          </tr>
+        </table>
+      </td>
+      <td></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td colspan="12" align="left">
+        Less
+      </td>
+      <td colspan="12" align="right">
+        More
+      </td>
+      <td></td>
+    </tr>
   </table>
-  <div class="cell" v-for="cell in cells" :key="cell" :title="cell"></div>
-  <!-- <template v-for="day in 7">
-      <template v-for="hour in 24">
-        <div class="cell" :key="`${day}-${hour}`">{{ day }}:{{ hour }}</div>
-      </template>
-    </template> -->
 </template>
 <script setup>
+import { computed } from "@vue/runtime-core";
 import dayOfWeek from "../dayOfWeek";
 import hourOfDay from "../hourOfDay";
-
 const props = defineProps({
   matrix: {
     type: Array,
-    required: true
+    required: true,
+  },
+  colors: {
+    type: Array,
+    required: true,
+  },
+});
+
+const border = computed(() => {
+  const flatten = props.matrix.flat()
+  const max = Math.max.apply(null, flatten)
+  const min = Math.min.apply(null, flatten)
+  return {
+    min, max
   }
 })
-console.log(props.matrix)
-const generator = (d, h) => {
-  const x = (d - 3.5) / 3.5;
-  const y = (h - 12) / 12;
-  return Math.floor(100 - (x * x + y * y) * 50);
-};
+
 const grade = (value) => {
-  return `grade${Math.floor(value / 20)}`;
-};
-// const hourOfDay = (hour) => {
-//   if (hour < 13) {
-//     return `${hour} AM`;
-//   }
-//   return `${hour - 12} PM`;
-// };
-// const dayOfWeek = (day) => {
-//   return ["Mon", "Tue", "Wed", "Thu", "Fry", "Sat", "Sun"][day - 1];
-// };
-let cells = [];
-for (let day = 0; day < 7; day++) {
-  for (let hour = 0; hour < 24; hour++) {
-    cells.push(`${day}-${hour}`);
+  const steps = props.colors.length - 1
+  const norm = (value - border.value.min) / (border.value.max - border.value.min)
+  return Math.ceil(norm * steps)
+} 
+
+const cellStyle = (grade) => {
+  return {
+    backgroundColor: props.colors[grade]
   }
-}
+};
 </script>
 <style lang="scss" scoped>
 .grid {

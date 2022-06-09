@@ -1,33 +1,24 @@
+<template>
+  <cloud :matrix="matrix" :colors="colors" />
+</template>
 <script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
 import cloud from "./components/cloud.vue";
 const generator = (d, h) => {
   const x = (d - 3.5) / 3.5;
   const y = (h - 12) / 12;
   return Math.floor(100 - (x * x + y * y) * 50);
 };
-const grade = (value) => {
-  return `grade${Math.floor(value / 20)}`;
-};
 const matrix = [];
 for (let day = 0; day < 7; day++) {
   const row = [];
   for (let hour = 0; hour < 24; hour++) {
     const value = generator(day, hour);
-    const scale = grade(value);
-    row.push({
-      value,
-      scale,
-    });
+    row.push(value);
   }
   matrix.push(row);
 }
+const colors = ["#C7E7FF", "#8ECFFF", "#0093FF", "#0066B0", "#002E50"];
 </script>
-
-<template>
-  <cloud :matrix="matrix" />
-</template>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
