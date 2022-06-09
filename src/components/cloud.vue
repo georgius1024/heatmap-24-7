@@ -2,11 +2,11 @@
   <table class="grid" cellspacing="2">
     <tr>
       <td></td>
-      <td v-for="hour in 24" :key="hour" class="hour">{{ hourOfDay(hour) }}</td>
+      <td v-for="hour in 24" :key="hour" class="label">{{ hourOfDay(hour) }}</td>
       <td></td>
     </tr>
     <tr v-for="day in 7" :key="day">
-      <td class="day">{{ dayOfWeek(day) }}</td>
+      <td class="label">{{ dayOfWeek(day) }}</td>
       <td
         v-for="hour in 24"
         :key="hour"
@@ -14,20 +14,20 @@
         :title="props.matrix[day - 1][hour - 1]"
         :style="cellStyle(grade(props.matrix[day - 1][hour - 1]))"
       ></td>
-      <td class="day">{{ dayOfWeek(day) }}</td>
+      <td class="label">{{ dayOfWeek(day) }}</td>
     </tr>
     <tr>
       <td></td>
-      <td v-for="hour in 24" :key="hour" class="hour">{{ hourOfDay(hour) }}</td>
+      <td v-for="hour in 24" :key="hour" class="label">{{ hourOfDay(hour) }}</td>
       <td></td>
     </tr>
     <tr>
       <td></td>
       <td colspan="12" class="hour strike">
-        <span class="white-bkg">AM</span>
+        <span class="white-bkg label">AM</span>
       </td>
       <td colspan="12" class="hour strike">
-        <span class="white-bkg">PM</span>
+        <span class="white-bkg label">PM</span>
       </td>
       <td></td>
     </tr>
@@ -36,7 +36,11 @@
       <td colspan="24">
         <table cellpadding="0" cellspacing="0" width="100%" class="white-bkg">
           <tr height="9">
-            <td v-for="color in props.colors" :key="color" :bgcolor="color"></td>
+            <td
+              v-for="color in props.colors"
+              :key="color"
+              :bgcolor="color"
+            ></td>
           </tr>
         </table>
       </td>
@@ -44,11 +48,11 @@
     </tr>
     <tr>
       <td></td>
-      <td colspan="12" align="left">
-        Less
+      <td colspan="12" align="left" class="label">
+        <slot name="less">Less</slot>
       </td>
-      <td colspan="12" align="right">
-        More
+      <td colspan="12" align="right" class="label">
+        <slot name="more">More</slot>        
       </td>
       <td></td>
     </tr>
@@ -70,34 +74,35 @@ const props = defineProps({
 });
 
 const border = computed(() => {
-  const flatten = props.matrix.flat()
-  const max = Math.max.apply(null, flatten)
-  const min = Math.min.apply(null, flatten)
+  const flatten = props.matrix.flat();
+  const max = Math.max.apply(null, flatten);
+  const min = Math.min.apply(null, flatten);
   return {
-    min, max
-  }
-})
+    min,
+    max,
+  };
+});
 
 const grade = (value) => {
-  const steps = props.colors.length - 1
-  const norm = (value - border.value.min) / (border.value.max - border.value.min)
-  return Math.ceil(norm * steps)
-} 
+  const steps = props.colors.length - 1;
+  const norm =
+    (value - border.value.min) / (border.value.max - border.value.min);
+  return Math.ceil(norm * steps);
+};
 
 const cellStyle = (grade) => {
   return {
-    backgroundColor: props.colors[grade]
-  }
+    backgroundColor: props.colors[grade],
+  };
 };
 </script>
 <style lang="scss" scoped>
 .grid {
   background-color: #fff;
-  .hour,
-  .day {
-    font-size: 8px;
+  .label {
+    font-size: 14px;
     text-align: center;
-    color: #777;
+    color: #697b7e;
   }
   .white-bkg {
     background-color: #fff;
@@ -105,7 +110,7 @@ const cellStyle = (grade) => {
   }
   .cell {
     width: 20px;
-    height: 30px;
+    height: 35px;
     &.grade0 {
       background-color: #7777ff00;
     }
@@ -126,10 +131,10 @@ const cellStyle = (grade) => {
     background: rgb(255, 255, 255);
     background: linear-gradient(
       0deg,
-      rgba(255, 255, 255, 1) 45%,
-      rgba(1, 63, 88, 0.3) 45%,
-      rgba(1, 63, 88, 0.3) 55%,
-      rgba(255, 255, 255, 1) 55%
+      #fff 45%,
+      #e3e7e8 45%,
+      #e3e7e8 55%,
+      #fff 55%
     );
   }
 }
