@@ -48,10 +48,10 @@
     </tr>
     <tr>
       <td></td>
-      <td colspan="12" align="left" class="label">
+      <td colspan="12" align="left" class="label text-left">
         <slot name="less">Less</slot>
       </td>
-      <td colspan="12" align="right" class="label">
+      <td colspan="12" align="right" class="label text-right">
         <slot name="more">More</slot>        
       </td>
       <td></td>
@@ -137,6 +137,12 @@ const cellStyle = (grade) => {
       #e3e7e8 55%,
       #fff 55%
     );
+  }
+  .text-left {
+    text-align: left;
+  }
+  .text-right {
+    text-align: right;
   }
 }
 </style>
