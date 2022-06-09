@@ -98,6 +98,7 @@ const cellStyle = (grade) => {
 </script>
 <style lang="scss" scoped>
 .grid {
+  display: inline-table;
   background-color: #fff;
   .label {
     font-size: 14px;
